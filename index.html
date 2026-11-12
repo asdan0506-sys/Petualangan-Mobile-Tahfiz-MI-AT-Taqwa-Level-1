@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06439e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.png" type="image/png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>Balap Hafalan Qur'an</title>
+<style>
+:root{--bg:#eaf5ff;--panel:#ffffff;--panel2:#d7edff;--gold:#ffe34d;--mint:#079df2;--white:#092d70;--muted:#46618c;--red:#d43d48}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#d0edff,#f5faff 70%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:20px 16px 12px;text-align:center;background:linear-gradient(145deg,#06368b,#079df2);color:#fff;border-bottom:5px solid #ffe34d;box-shadow:0 6px 24px #0757a72b}h1{font-size:clamp(24px,5vw,36px);margin:6px 0;color:#fff}header p{margin:5px 0;color:#e7f5ff;font-size:13px}.school-logo{display:block;width:clamp(88px,22vw,132px);height:auto;margin:0 auto 10px;border-radius:50%;background:#fff;border:4px solid #fff;box-shadow:0 4px 16px #002c6d70}.school-name{font-size:12px;font-weight:800;letter-spacing:.09em;color:#ffe34d}
+main{max-width:850px;margin:auto;padding:10px 14px 30px}.top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.pill{background:#e5f3ff;border:1px solid #98c8ef;padding:8px 12px;border-radius:99px;font-size:13px}
+.track-wrap{background:linear-gradient(145deg,#ffffff,#d3ecff);border:1px solid #98c8ef;border-radius:22px;padding:12px;box-shadow:0 14px 40px #0006}
+.track{height:520px;position:relative;overflow:hidden;border-radius:16px;background:radial-gradient(ellipse,#a6dcff 0 32%,#6bbcf4 33% 100%)}
+.road{position:absolute;inset:55px 9%;border:54px solid #4b6b87;border-radius:50%;box-shadow:inset 0 0 0 3px #c9d5df,0 0 0 2px #222}.road:after{content:"";position:absolute;inset:-19px;border:2px dashed #ffe34d;border-radius:50%}
+.center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#073779}.center strong{font-size:22px}.center span{font-size:12px;color:#285e9d}
+.check{position:absolute;width:28px;height:28px;border-radius:50%;background:#ffe34d;color:#062d6c;border:3px solid #fff;display:grid;place-items:center;font-size:11px;font-weight:900;z-index:2;box-shadow:0 2px 8px #0008}
+.car{position:absolute;left:50%;top:50%;font-size:42px;transform:translate(-50%,-50%);z-index:4;filter:drop-shadow(0 3px 3px #0008);transition:left .7s,top .7s,transform .7s}
+.track-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;color:var(--muted);font-size:12px}
+.progress{height:9px;background:#c6e4fa;border-radius:20px;overflow:hidden;flex:1}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--gold));transition:width .4s}
+.panel{margin-top:14px;background:#ffffff;border:1px solid #98c8ef;border-radius:20px;padding:16px;box-shadow:0 6px 20px #0c4b8a12}
+h2{font-size:18px;margin:0 0 8px;color:#06439e}.small{color:var(--muted);font-size:13px;line-height:1.5}
+.arabic{font-family:"Noto Naskh Arabic","Amiri",serif;direction:rtl;text-align:center;font-size:clamp(25px,6vw,36px);line-height:1.9;background:#f0f8ff;border:1px solid #a1c8eb;padding:15px;border-radius:14px;margin:12px 0}
+button{border:0;border-radius:13px;padding:12px 15px;font-weight:750;font-size:14px;cursor:pointer;background:var(--gold);color:#062d6c}
+.drive-pad{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:8px;width:100%}.drive-pad button{min-height:58px}.drive-pad .gas{background:linear-gradient(145deg,#ffe34d,#ffbd16);font-size:18px;box-shadow:0 4px 0 #c28b00}.drive-pad #brake{grid-column:1/-1;min-height:42px;background:#e6eff9;color:#173d70}.drive-pad button:active{transform:scale(.97)}button.secondary{background:#e0f0ff;color:#06439e;border:1px solid #a4c8e9}button:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.choices{display:grid;gap:8px;margin-top:12px}.choices button{text-align:left;background:#eaf5ff;color:var(--white);border:1px solid #99c6eb}.choices button:active{background:#cde8ff}
+.status{padding:10px 12px;border-radius:12px;background:#f0f8ff;color:var(--muted);font-size:13px;margin-top:10px;min-height:40px}
+.good{color:#087d4c}.bad{color:#c83040}.hidden{display:none!important}
+input{width:100%;padding:12px;border-radius:12px;border:1px solid #a4c8e9;background:#f0f8ff;color:#092d70;font-size:16px}
+footer{text-align:center;color:#59769b;font-size:11px;padding:16px}
+@media(max-width:480px){.track{height:390px}.road{border-width:38px;inset:45px 7%}.check{width:25px;height:25px}.track-foot{font-size:11px}}
+</style></head>
+<body>
+<header><img class="school-logo" src="logo-mi-at-taqwa.jpg" alt="Logo BTQ dan Tahfiz MI At-Taqwa"><div class="school-name">BTQ DAN TAHFIZ • MI AT-TAQWA</div><h1>🏁 Balap Hafalan Qur'an</h1><p>Balapan satu mobil • Hafalan Juz 30 • Al-Zalzalah sampai Al-Fil</p></header>
+<main>
+<div class="top"><span class="pill" id="stage">Putaran 1 dari 1</span><span class="pill" id="score">Poin: 0</span><span class="pill" id="position">Pos: 0/10</span></div>
+<section class="track-wrap">
+ <div class="track" id="track">
+  <div class="road"></div><div class="center"><strong>🏎️ RACE TRACK</strong><span>Lewati 10 pos hafalan</span></div>
+  <div class="car" id="car">🏎️</div>
+ </div>
+ <div class="track-foot"><span>Progres</span><div class="progress"><div id="bar"></div></div><span id="pct">0%</span></div>
+</section>
+<section class="panel">
+ <h2 id="qtitle">Siap memulai balapan?</h2><div class="small" id="instruction">Pilih surat wajib, dengarkan audio tilawah, lalu susun potongan ayat sesuai urutan yang benar.</div>
+ <div id="question"></div>
+ <div class="actions" id="controls"><button id="start">Mulai Balapan</button></div>
+ <div class="status" id="status" aria-live="polite">Tekan “Mulai Balapan” untuk memulai.</div>
+</section>
+<section class="panel"><h2>Materi hafalan</h2><div class="small">Surat yang digunakan: Al-Zalzalah (99), Al-'Adiyat (100), Al-Qari'ah (101), At-Takatsur (102), Al-'Asr (103), Al-Humazah (104), dan Al-Fil (105).</div></section>
+</main><footer>Game pembelajaran • Audio tilawah memerlukan koneksi internet.</footer>
+<script>
+const surahs = [
+{name:"Al-Zalzalah",n:99,v:["إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا","وَأَخْرَجَتِ الْأَرْضُ أَثْقَالَهَا","وَقَالَ الْإِنسَانُ مَا لَهَا","يَوْمَئِذٍ تُحَدِّثُ أَخْبَارَهَا","بِأَنَّ رَبَّكَ أَوْحَىٰ لَهَا","يَوْمَئِذٍ يَصْدُرُ النَّاسُ أَشْتَاتًا لِّيُرَوْا أَعْمَالَهُمْ","فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ","وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَرَهُ"]},
+{name:"Al-'Adiyat",n:100,v:["وَالْعَادِيَاتِ ضَبْحًا","فَالْمُورِيَاتِ قَدْحًا","فَالْمُغِيرَاتِ صُبْحًا","فَأَثَرْنَ بِهِ نَقْعًا","فَوَسَطْنَ بِهِ جَمْعًا","إِنَّ الْإِنسَانَ لِرَبِّهِ لَكَنُودٌ","وَإِنَّهُ عَلَىٰ ذَٰلِكَ لَشَهِيدٌ","وَإِنَّهُ لِحُبِّ الْخَيْرِ لَشَدِيدٌ","أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِي الْقُبُورِ","وَحُصِّلَ مَا فِي الصُّدُورِ","إِنَّ رَبَّهُم بِهِمْ يَوْمَئِذٍ لَّخَبِيرٌ"]},
+{name:"Al-Qari'ah",n:101,v:["الْقَارِعَةُ","مَا الْقَارِعَةُ","وَمَا أَدْرَاكَ مَا الْقَارِعَةُ","يَوْمَ يَكُونُ النَّاسُ كَالْفَرَاشِ الْمَبْثُوثِ","وَتَكُونُ الْجِبَالُ كَالْعِهْنِ الْمَنفُوشِ","فَأَمَّا مَن ثَقُلَتْ مَوَازِينُهُ","فَهُوَ فِي عِيشَةٍ رَّاضِيَةٍ","وَأَمَّا مَنْ خَفَّتْ مَوَازِينُهُ","فَأُمُّهُ هَاوِيَةٌ","وَمَا أَدْرَاكَ مَا هِيَهْ","نَارٌ حَامِيَةٌ"]},
+{name:"At-Takatsur",n:102,v:["أَلْهَاكُمُ التَّكَاثُرُ","حَتَّىٰ زُرْتُمُ الْمَقَابِرَ","كَلَّا سَوْفَ تَعْلَمُونَ","ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ","كَلَّا لَوْ تَعْلَمُونَ عِلْمَ الْيَقِينِ","لَتَرَوُنَّ الْجَحِيمَ","ثُمَّ لَتَرَوُنَّهَا عَيْنَ الْيَقِينِ","ثُمَّ لَتُسْأَلُنَّ يَوْمَئِذٍ عَنِ النَّعِيمِ"]},
+{name:"Al-'Asr",n:103,v:["وَالْعَصْرِ","إِنَّ الْإِنسَانَ لَفِي خُسْرٍ","إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ"]},
+{name:"Al-Humazah",n:104,v:["وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ","الَّذِي جَمَعَ مَالًا وَعَدَّدَهُ","يَحْسَبُ أَنَّ مَالَهُ أَخْلَدَهُ","كَلَّا لَيُنبَذَنَّ فِي الْحُطَمَةِ","وَمَا أَدْرَاكَ مَا الْحُطَمَةُ","نَارُ اللَّهِ الْمُوقَدَةُ","الَّتِي تَطَّلِعُ عَلَى الْأَفْئِدَةِ","إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌ","فِي عَمَدٍ مُّمَدَّدَةٍ"]},
+{name:"Al-Fil",n:105,v:["أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ","أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ","وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ","تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ","فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍ"]}
+];
+const $=id=>document.getElementById(id);
+let pos=0,score=0,questions=[],current=null,recognition=null,recognized="",micActive=false;
+let driveProgress=0,driving=false,driveTimer=null,laneShift=0;
+let activeAudio=null,audioSequenceToken=0;
+const total=10;
+function norm(s){return (s||"").toLowerCase().replace(/[\u064B-\u065F\u0670\u0640]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/[^\u0600-\u06FF]/g,"").trim()}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function makeQuestions(){
+ const all=[]; 
+ // 1 required recitation of one of the three named surahs
+ all.push({type:"arrange",title:"Pos 1 • Susun ayat surat wajib",prompt:"Pilih surat wajib, dengarkan audio tilawah, lalu susun ayat dari awal sampai akhir.",surahChoices:[0,1,5]});
+ // 6 continuation questions, generated from a verse and its following verse within the same surah
+ let pairs=[];surahs.forEach((s,si)=>s.v.slice(0,-1).forEach((v,i)=>pairs.push({si,i})));
+ shuffle(pairs).slice(0,6).forEach(p=>{const s=surahs[p.si];all.push({type:"continue",title:"Sambung ayat",surah:p.si,index:p.i,prompt:"Lanjutkan ayat berikutnya:"})});
+ // one ending-to-next-surah challenge
+ all.push({type:"bridge",title:"Akhir surat ke surat selanjutnya",prompt:"Bacakan akhir surat yang tampil, lalu lanjutkan dengan awal surat berikutnya.",from:2});
+ // one guess-the-surah
+ const g=shuffle(surahs.map((s,i)=>i))[0];all.push({type:"guess",title:"Tebak surat",surah:g,index:Math.min(1,surahs[g].v.length-1),prompt:"Potongan ayat ini berasal dari surat apa?"});
+ // extra finish challenge
+ all.push({type:"guess",title:"Tebak surat • Final",surah:6,index:2,prompt:"Tebak nama surat dari potongan ayat berikut."});
+ return all;
+}
+function setStatus(t,kind=""){ $("status").innerHTML=kind?`<span class="${kind}">${t}</span>`:t}
+function updateTrack(){const progress=driving?pos+driveProgress:pos;const angle=(progress/total)*Math.PI*2-Math.PI/2;const track=$("track"),r=track.getBoundingClientRect();const rx=Math.max(90,r.width*.34)+laneShift,ry=Math.max(85,(r.height-100)*.37)+laneShift;const x=r.width/2+Math.cos(angle)*rx,y=r.height/2+Math.sin(angle)*ry;$("car").style.left=x+"px";$("car").style.top=y+"px";$("car").style.transform=`translate(-50%,-50%) rotate(${angle+Math.PI/2}rad)`;$("position").textContent=`Pos: ${pos}/${total}`;$("bar").style.width=(progress/total*100)+"%";$("pct").textContent=Math.round(progress/total*100)+"%"}
+function showDriving(){driving=true;driveProgress=0;current=null;$ ("qtitle").textContent=`Menuju Pos ${pos+1}`;$ ("instruction").textContent="Kendalikan mobilmu! Tahan tombol GAS untuk melaju. Soal akan muncul saat tiba di pos.";$ ("question").innerHTML='<div class="small" style="text-align:center;font-weight:800">🚦 Jalan menuju pos pemeriksaan berikutnya</div><div style="font-size:13px;text-align:center;margin:10px 0;color:#46618c">Gunakan tombol kemudi dan gas di bawah lintasan.</div>';$ ("controls").innerHTML='<div class="drive-pad"><button class="secondary" id="steerLeft">◀ KIRI</button><button id="gas" class="gas">🚀 GAS</button><button class="secondary" id="steerRight">KANAN ▶</button><button class="secondary" id="brake">■ REM</button></div>';
+ const gas=$("gas");const go=()=>{if(!driving||driveTimer)return;driveTimer=setInterval(()=>{driveProgress=Math.min(1,driveProgress+.035);updateTrack();if(driveProgress>=1){stopDriving();driving=false;setStatus(`Sampai di Pos ${pos+1}! Saatnya menjawab tantangan.` ,"good");render()}},90)};const stop=()=>stopDriving();gas.addEventListener("pointerdown",e=>{e.preventDefault();go()});["pointerup","pointerleave","pointercancel"].forEach(ev=>gas.addEventListener(ev,stop));gas.addEventListener("click",()=>{if(!driveTimer&&driving){driveProgress=Math.min(1,driveProgress+.035);updateTrack();if(driveProgress>=1){driving=false;render()}}});$("steerLeft").onclick=()=>{laneShift=Math.max(-18,laneShift-6);updateTrack()};$("steerRight").onclick=()=>{laneShift=Math.min(18,laneShift+6);updateTrack()};$("brake").onclick=stop;updateTrack();}
+function stopDriving(){if(driveTimer){clearInterval(driveTimer);driveTimer=null}}
+function addMarkers(){document.querySelectorAll(".check").forEach(e=>e.remove());for(let i=0;i<total;i++){const a=(i/total)*Math.PI*2-Math.PI/2;const track=$("track"),w=track.clientWidth,h=track.clientHeight,rx=Math.max(75,w*.34),ry=Math.max(70,(h-70)*.37);let el=document.createElement("div");el.className="check";el.textContent=i+1;el.style.left=(w/2+Math.cos(a)*rx-14)+"px";el.style.top=(h/2+Math.sin(a)*ry-14)+"px";track.appendChild(el)}updateTrack()}
+function render(){
+ stopQuestionAudio();stopDriving();driving=false;
+ if(pos>=total){finish();return}
+ current=questions[pos];$("qtitle").textContent=current.title;$("instruction").textContent=current.prompt;$("question").innerHTML="";$("controls").innerHTML="";
+ if(current.type==="arrange"){
+  const choices=document.createElement("div");choices.className="choices";
+  current.surahChoices.forEach(si=>{let b=document.createElement("button");b.textContent=surahs[si].name;b.onclick=()=>{current.selected=si;showArrange()};choices.appendChild(b)});$("question").appendChild(choices);
+  if(current.selected!==undefined)showArrange();
+ }else if(current.type==="continue"){
+  const s=surahs[current.surah];$("question").innerHTML=`<div class="small">${s.name} • Ayat ${current.index+1}</div><div class="arabic">${s.v[current.index]}</div><div class="actions"><button type="button" id="listenPrompt">🔊 Dengarkan ayat</button><button type="button" class="secondary" id="listenAnswer">▶ Dengarkan ayat sambungannya</button><button type="button" class="secondary" id="stopQuestionAudio">■ Hentikan audio</button></div><div class="small">Dengarkan ayat di atas, lalu rekam bacaan ayat berikutnya (${current.index+2}). Tombol jawaban bisa digunakan untuk belajar setelah mencoba.</div>`;
+  $("listenPrompt").onclick=()=>playAyah(current.surah,current.index);
+  $("listenAnswer").onclick=()=>playAyah(current.surah,current.index+1);
+  $("stopQuestionAudio").onclick=stopQuestionAudio;
+  micButtons(()=>checkSpoken(s.v[current.index+1],"Lanjutkan ayat berikutnya."));
+ }else if(current.type==="bridge"){
+  const s=surahs[current.from],next=surahs[current.from+1],lastStart=Math.max(0,s.v.length-2);
+  $("question").innerHTML=`<div class="small">${s.name} • akhir surat</div><div class="arabic">${s.v.slice(-2).join(" ۝ ")}</div><div class="small">Lanjutkan dengan awal surat ${next.name}</div><div class="actions"><button type="button" id="listenBridge">🔊 Dengarkan akhir surat</button><button type="button" class="secondary" id="listenNextStart">▶ Dengarkan awal surat berikutnya</button><button type="button" class="secondary" id="listenBridgeAll">▶ Dengarkan sambungan lengkap</button><button type="button" class="secondary" id="stopQuestionAudio">■ Hentikan audio</button></div>`;
+  $("listenBridge").onclick=()=>playSequence(current.from,lastStart,s.v.length-1);
+  $("listenNextStart").onclick=()=>playAyah(current.from+1,0);
+  $("listenBridgeAll").onclick=()=>playBridgeSequence(current.from);
+  $("stopQuestionAudio").onclick=stopQuestionAudio;
+  micButtons(()=>checkSpoken(s.v.slice(-2).join(" ")+ " "+next.v[0],"Bacakan dua ayat terakhir lalu awal surat berikutnya."));
+ }else{
+  const s=surahs[current.surah];$("question").innerHTML=`<div class="arabic">${s.v[current.index]}</div><div class="actions"><button type="button" id="listenGuess">🔊 Dengarkan potongan ayat</button><button type="button" class="secondary" id="stopQuestionAudio">■ Hentikan audio</button></div><div class="small">Dengarkan bacaan, lalu pilih nama surat yang benar:</div>`; 
+  $("listenGuess").onclick=()=>playAyah(current.surah,current.index);
+  $("stopQuestionAudio").onclick=stopQuestionAudio;
+  const opts=shuffle([current.surah,...shuffle(surahs.map((x,i)=>i).filter(i=>i!==current.surah)).slice(0,3)]);
+  const choices=document.createElement("div");choices.className="choices";opts.forEach(i=>{let b=document.createElement("button");b.textContent=surahs[i].name;b.onclick=()=>{if(i===current.surah){score+=100;setStatus("Tepat! +100 poin.","good");advance()}else setStatus("Belum tepat. Coba pilih lagi.","bad")};choices.appendChild(b)});$("question").appendChild(choices);
+ }
+ $("score").textContent="Poin: "+score;updateTrack();
+}
+function ayahAudioUrl(surahNumber,ayahNumber){
+ return `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${String(surahNumber).padStart(3,"0")}${String(ayahNumber).padStart(3,"0")}.mp3`;
+}
+function stopQuestionAudio(){
+ audioSequenceToken++;
+ if(activeAudio){activeAudio.pause();activeAudio.currentTime=0;activeAudio=null}
+ setStatus("Audio dihentikan.");
+}
+function playAyah(surahIndex,ayahIndex){
+ stopQuestionAudio();
+ const s=surahs[surahIndex];
+ activeAudio=new Audio(ayahAudioUrl(s.n,ayahIndex+1));
+ activeAudio.onerror=()=>setStatus("Audio ayat belum tersedia atau koneksi terputus. Periksa internet lalu coba lagi.","bad");
+ activeAudio.play().catch(()=>setStatus("Audio tidak dapat diputar. Periksa koneksi internet dan izin audio browser.","bad"));
+ return activeAudio;
+}
+function playSequence(surahIndex,startIndex,endIndex){
+ stopQuestionAudio();
+ const token=audioSequenceToken,s=surahs[surahIndex];
+ let i=startIndex;
+ const next=()=>{
+  if(token!==audioSequenceToken||i>endIndex)return;
+  activeAudio=new Audio(ayahAudioUrl(s.n,i+1));
+  activeAudio.onended=()=>{i++;next()};
+  activeAudio.onerror=()=>setStatus("Audio ayat belum tersedia atau koneksi terputus. Coba putar ayat satu per satu.","bad");
+  activeAudio.play().catch(()=>setStatus("Audio tidak dapat diputar. Periksa koneksi internet dan izin audio browser.","bad"));
+ };
+ next();
+}
+function playBridgeSequence(surahIndex){
+ stopQuestionAudio();
+ const token=audioSequenceToken,first=surahs[surahIndex],second=surahs[surahIndex+1];
+ const items=[];
+ for(let i=Math.max(0,first.v.length-2);i<first.v.length;i++)items.push([first.n,i+1]);
+ items.push([second.n,1]);
+ let i=0;
+ const next=()=>{
+  if(token!==audioSequenceToken||i>=items.length)return;
+  activeAudio=new Audio(ayahAudioUrl(items[i][0],items[i][1]));
+  activeAudio.onended=()=>{i++;next()};
+  activeAudio.onerror=()=>setStatus("Audio sambungan surat belum tersedia atau koneksi terputus.","bad");
+  activeAudio.play().catch(()=>setStatus("Audio tidak dapat diputar. Periksa koneksi internet.","bad"));
+ };
+ next();
+}
+function playWholeSurah(surahIndex){
+ const s=surahs[surahIndex];
+ playSequence(surahIndex,0,s.v.length-1);
+ return stopQuestionAudio;
+}
+function showArrange(){
+ const s=surahs[current.selected];current.order=shuffle(s.v.map((_,i)=>i));current.picked=[];
+ $("question").innerHTML=`<div class="small">${s.name} • Surat ${s.n} • Susun ${s.v.length} ayat sesuai urutan.</div>
+ <div class="actions"><button type="button" id="listenAll">▶ Dengarkan seluruh surat</button><button type="button" class="secondary" id="stopAudio">■ Hentikan audio</button></div>
+ <div class="small" style="margin-top:12px">Susunan ayat pilihanmu:</div>
+ <div id="picked" class="arabic" style="min-height:76px;font-size:22px">Ketuk potongan ayat sesuai urutan.</div>
+ <div class="small">Ketuk 🔊 untuk mendengarkan ayat, lalu ketuk potongan ayat untuk menyusunnya.</div>
+ <div id="tiles" class="choices"></div>`;
+ let stopAll=null;
+ $("listenAll").onclick=()=>{if(stopAll)stopAll();stopAll=playWholeSurah(current.selected)};
+ $("stopAudio").onclick=()=>{if(stopAll)stopAll();setStatus("Audio dihentikan.")};
+ const tiles=$("tiles");
+ current.order.forEach(idx=>{
+  const row=document.createElement("div");row.style.display="grid";row.style.gridTemplateColumns="minmax(0,1fr) auto";row.style.gap="7px";
+  const btn=document.createElement("button");btn.type="button";btn.textContent=s.v[idx];btn.style.direction="rtl";btn.style.fontFamily='"Noto Naskh Arabic","Amiri",serif';btn.style.fontSize="20px";btn.style.lineHeight="1.8";btn.style.textAlign="center";
+  btn.onclick=()=>{
+   if(current.picked.includes(idx))return;
+   current.picked.push(idx);btn.disabled=true;btn.style.opacity=".35";
+   $("picked").textContent=current.picked.map(i=>s.v[i]).join(" ۝ ");
+   if(current.picked.length===s.v.length){
+    if(current.picked.every((v,i)=>v===i)){score+=100;setStatus("MasyaAllah! Susunan ayat benar. +100 poin.","good");advance()}
+    else{setStatus("Urutan belum tepat. Silakan ulangi susunan.","bad");const retry=document.createElement("button");retry.className="secondary";retry.textContent="Ulangi susunan";retry.onclick=showArrange;$("controls").appendChild(retry)}
+   }
+  };
+  const listen=document.createElement("button");listen.type="button";listen.className="secondary";listen.textContent="🔊";listen.title="Dengarkan ayat";listen.onclick=()=>playAyah(current.selected,idx);
+  row.appendChild(btn);row.appendChild(listen);tiles.appendChild(row);
+ });
+ $("controls").innerHTML='<button class="secondary" id="resetArrange">Acak ulang ayat</button>';
+ $("resetArrange").onclick=showArrange;
+}
+function micButtons(callback){
+ const wrap=$("controls");let speak=document.createElement("button");speak.textContent="🎙️ Mulai bicara";speak.onclick=callback;wrap.appendChild(speak);
+ let manual=document.createElement("button");manual.className="secondary";manual.textContent="Lewati / minta bantuan";manual.onclick=()=>{setStatus("Tantangan belum dinilai benar. Pos tetap menunggu; coba lagi atau gunakan bantuan guru.","bad")};wrap.appendChild(manual);
+}
+function checkSpoken(expected,label,full=false){
+ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SpeechRecognition){setStatus("Browser ini belum mendukung pengenalan suara. Coba Chrome Android/desktop atau gunakan mode pilihan surat.","bad");return}
+ try{
+  recognition=new SpeechRecognition();recognition.lang="ar-SA";recognition.continuous=false;recognition.interimResults=false;recognized="";micActive=true;
+  setStatus("Mendengarkan... ucapkan dengan jelas dalam bahasa Arab.");
+  recognition.onresult=e=>{recognized=e.results[0][0].transcript||""};
+  recognition.onerror=e=>{micActive=false;setStatus("Mikrofon/pengenalan suara bermasalah ("+e.error+"). Izinkan akses mikrofon lalu coba lagi.","bad")};
+  recognition.onend=()=>{
+   micActive=false;if(!recognized){setStatus("Suara belum tertangkap. Coba bicara lebih dekat ke mikrofon.","bad");return}
+   const got=norm(recognized),want=norm(expected);
+   // forgiving partial match: recognition may omit short particles/diacritics
+   const words=want.split(/\s+/).filter(Boolean),matched=words.filter(w=>got.includes(w)).length,ratio=matched/Math.max(words.length,1);
+   if(got===want||ratio>=.72){score+=100;setStatus("Bacaan terdeteksi cukup sesuai ("+Math.round(ratio*100)+"%). +100 poin. Catatan: periksa kembali bacaan secara langsung.","good");advance()}
+   else setStatus("Bacaan yang tertangkap: "+recognized+". Kecocokan "+Math.round(ratio*100)+"%. Silakan ulangi.","bad");
+  };
+  recognition.start();
+ }catch(err){setStatus("Tidak dapat memulai mikrofon. Periksa izin browser.","bad")}
+}
+function advance(){pos++;$("score").textContent="Poin: "+score;updateTrack();setTimeout(()=>{if(pos>=total)finish();else showDriving()},650)}
+function finish(){$("qtitle").textContent="🏆 Balapan selesai!";$("instruction").textContent="Kamu telah menyelesaikan seluruh pos hafalan."; $("question").innerHTML=`<div class="arabic">مَا شَاءَ اللَّهُ</div><h2 style="text-align:center">Skor akhir: ${score} poin</h2><p class="small" style="text-align:center">Selesai 10 pos • Materi Al-Zalzalah sampai Al-Fil</p>`;$("controls").innerHTML="";let b=document.createElement("button");b.textContent="Main lagi";b.onclick=reset;$("controls").appendChild(b);setStatus("Hebat! Perlu diingat, penilaian suara otomatis adalah perkiraan, bukan tajwid atau tasmi' yang tervalidasi.","good")}
+function startGame(){questions=makeQuestions();pos=0;score=0;driveProgress=0;laneShift=0;$("score").textContent="Poin: 0";showDriving();setStatus("Balapan dimulai! Tahan tombol GAS untuk menuju Pos 1.")};
+function reset(){stopDriving();driving=false;pos=0;score=0;driveProgress=0;questions=makeQuestions();$("qtitle").textContent="Siap memulai balapan?";$("instruction").textContent="Kendalikan mobil sendiri. Soal muncul saat tiba di pos pemeriksaan."; $("question").innerHTML="";$("controls").innerHTML='<button id="start">Mulai Balapan</button>';$("start").onclick=startGame;setStatus("Tekan “Mulai Balapan” untuk memulai.");updateTrack()}
+$("start").onclick=startGame;window.addEventListener("resize",addMarkers);addMarkers();
+</script><script>if ("serviceWorker" in navigator && location.protocol.startsWith("http")) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {})); }</script>
+</body></html>
