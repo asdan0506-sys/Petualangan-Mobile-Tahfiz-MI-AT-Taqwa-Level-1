@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06439e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.png" type="image/png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>Balap Hafalan Qur'an</title>
+<style>
+:root{--bg:#eaf5ff;--panel:#ffffff;--panel2:#d7edff;--gold:#ffe34d;--mint:#079df2;--white:#092d70;--muted:#46618c;--red:#d43d48}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#d0edff,#f5faff 70%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:20px 16px 12px;text-align:center;background:linear-gradient(145deg,#06368b,#079df2);color:#fff;border-bottom:5px solid #ffe34d;box-shadow:0 6px 24px #0757a72b}h1{font-size:clamp(24px,5vw,36px);margin:6px 0;color:#fff}header p{margin:5px 0;color:#e7f5ff;font-size:13px}.school-logo{display:block;width:clamp(88px,22vw,132px);height:auto;margin:0 auto 10px;border-radius:50%;background:#fff;border:4px solid #fff;box-shadow:0 4px 16px #002c6d70}.school-name{font-size:12px;font-weight:800;letter-spacing:.09em;color:#ffe34d}
+main{max-width:850px;margin:auto;padding:10px 14px 30px}.top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.pill{background:#e5f3ff;border:1px solid #98c8ef;padding:8px 12px;border-radius:99px;font-size:13px}
+.track-wrap{background:linear-gradient(145deg,#ffffff,#d3ecff);border:1px solid #98c8ef;border-radius:22px;padding:12px;box-shadow:0 14px 40px #0006}
+.track{height:min(68vh,680px);min-height:430px;position:relative;overflow:hidden;border-radius:16px;background:#8bc9f3}.track-25d{position:relative;padding:0;border:2px solid #0b4b9c;box-shadow:inset 0 0 35px #001d4a55}#race25d{display:block;position:absolute;inset:0;width:100%;height:100%;touch-action:none}.race-hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none}.race-hud span{background:#052b65dd;color:#fff;border:1px solid #ffe34d;border-radius:30px;padding:8px 13px;font-weight:900;font-size:12px;box-shadow:0 3px 12px #001a3b66}
+.road{position:absolute;inset:55px 9%;border:54px solid #4b6b87;border-radius:50%;box-shadow:inset 0 0 0 3px #c9d5df,0 0 0 2px #222}.road:after{content:"";position:absolute;inset:-19px;border:2px dashed #ffe34d;border-radius:50%}
+.center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#073779}.center strong{font-size:22px}.center span{font-size:12px;color:#285e9d}
+.check{position:absolute;width:28px;height:28px;border-radius:50%;background:#ffe34d;color:#062d6c;border:3px solid #fff;display:grid;place-items:center;font-size:11px;font-weight:900;z-index:2;box-shadow:0 2px 8px #0008}
+.car{position:absolute;left:50%;top:50%;font-size:42px;transform:translate(-50%,-50%);z-index:4;filter:drop-shadow(0 3px 3px #0008);transition:left .7s,top .7s,transform .7s}
+.track-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;color:var(--muted);font-size:12px}
+.progress{height:9px;background:#c6e4fa;border-radius:20px;overflow:hidden;flex:1}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--gold));transition:width .4s}
+.panel{margin-top:14px;background:#ffffff;border:1px solid #98c8ef;border-radius:20px;padding:16px;box-shadow:0 6px 20px #0c4b8a12}
+h2{font-size:18px;margin:0 0 8px;color:#06439e}.small{color:var(--muted);font-size:13px;line-height:1.5}
+.arabic{font-family:"Noto Naskh Arabic","Amiri",serif;direction:rtl;text-align:center;font-size:clamp(25px,6vw,36px);line-height:1.9;background:#f0f8ff;border:1px solid #a1c8eb;padding:15px;border-radius:14px;margin:12px 0}
+button{border:0;border-radius:13px;padding:12px 15px;font-weight:750;font-size:14px;cursor:pointer;background:var(--gold);color:#062d6c}
+.drive-pad{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:8px;width:100%}.drive-pad button{min-height:58px}.drive-pad .gas{background:linear-gradient(145deg,#ffe34d,#ffbd16);font-size:18px;box-shadow:0 4px 0 #c28b00}.drive-pad #brake{grid-column:1/-1;min-height:42px;background:#e6eff9;color:#173d70}.drive-pad button:active{transform:scale(.97)}button.secondary{background:#e0f0ff;color:#06439e;border:1px solid #a4c8e9}button:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.answer-option{width:100%;min-height:84px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;white-space:normal}.answer-option .arabic{font-size:23px;line-height:1.8}.answer-option small{font-size:11px;color:inherit}.choices{display:grid;gap:8px;margin-top:12px}.choices button{text-align:left;background:#eaf5ff;color:var(--white);border:1px solid #99c6eb}.choices button:active{background:#cde8ff}
+.status{padding:10px 12px;border-radius:12px;background:#f0f8ff;color:var(--muted);font-size:13px;margin-top:10px;min-height:40px}
+.good{color:#087d4c}.bad{color:#c83040}.hidden{display:none!important}
+input{width:100%;padding:12px;border-radius:12px;border:1px solid #a4c8e9;background:#f0f8ff;color:#092d70;font-size:16px}
+footer{text-align:center;color:#59769b;font-size:11px;padding:16px}
+@media(max-width:480px){.track{height:58vh;min-height:390px}.road{border-width:38px;inset:45px 7%}.check{width:25px;height:25px}.track-foot{font-size:11px}}
+
+.track-25d{position:relative;overflow:hidden;padding:0;background:#8bc9f3}
+#race25d{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.joystick-wrap{display:flex;justify-content:center;align-items:center;padding:8px}
+.joystick{width:142px;height:142px;border-radius:50%;border:4px solid #d7edff;background:radial-gradient(circle,#1b68ad,#06368b);position:relative;touch-action:none;box-shadow:inset 0 3px 16px #001a4c,0 5px 14px #0003}
+.joystick:before{content:"";position:absolute;inset:12px;border:1px dashed #ffffff80;border-radius:50%}
+.stick{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px;border-radius:50%;background:linear-gradient(145deg,#ffe96b,#f0b900);border:3px solid white;box-shadow:0 3px 8px #001b4b;pointer-events:none}
+.joy-label{font-size:11px;text-align:center;font-weight:800;color:#17477f}
+</style></head>
+<body>
+<header><img class="school-logo" src="logo-mi-at-taqwa.jpg" alt="Logo BTQ dan Tahfiz MI At-Taqwa"><div class="school-name">BTQ DAN TAHFIZ • MI AT-TAQWA</div><h1>🏁 Balap Hafalan Qur'an</h1><p>Balapan satu mobil • Hafalan Juz 30 • Al-Zalzalah sampai Al-Fil</p></header>
+<main>
+<div class="top"><span class="pill" id="stage">Putaran 1 dari 1</span><span class="pill" id="score">Poin: 0</span><span class="pill" id="position">Pos: 0/10</span></div>
+<section class="track-wrap">
+ <div class="track track-25d" id="track">
+  <canvas id="race25d" aria-label="Lintasan balap perspektif"></canvas>
+  <div class="race-hud"><span id="speedHud">0 km/jam</span><span id="checkpointHud">POS 0 / 10</span></div>
+ </div>
+ <div class="track-foot"><span>Progres</span><div class="progress"><div id="bar"></div></div><span id="pct">0%</span></div>
+</section>
+<section class="panel">
+ <h2 id="qtitle">Siap memulai balapan?</h2><div class="small" id="instruction">Pilih surat wajib, dengarkan audio tilawah, lalu susun potongan ayat sesuai urutan yang benar.</div>
+ <div id="question"></div>
+ <div class="actions" id="controls"><button id="start">Mulai Balapan</button></div>
+ <div class="status" id="status" aria-live="polite">Tekan “Mulai Balapan” untuk memulai.</div>
+</section>
+<section class="panel"><h2>Materi hafalan</h2><div class="small">Surat yang digunakan: Al-Zalzalah (99), Al-'Adiyat (100), Al-Qari'ah (101), At-Takatsur (102), Al-'Asr (103), Al-Humazah (104), dan Al-Fil (105).</div></section>
+</main><footer>Game pembelajaran • Audio tilawah memerlukan koneksi internet.</footer>
+<script>
+const surahs = [
+{name:"Al-Zalzalah",n:99,v:["إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا","وَأَخْرَجَتِ الْأَرْضُ أَثْقَالَهَا","وَقَالَ الْإِنسَانُ مَا لَهَا","يَوْمَئِذٍ تُحَدِّثُ أَخْبَارَهَا","بِأَنَّ رَبَّكَ أَوْحَىٰ لَهَا","يَوْمَئِذٍ يَصْدُرُ النَّاسُ أَشْتَاتًا لِّيُرَوْا أَعْمَالَهُمْ","فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ","وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَرَهُ"]},
+{name:"Al-'Adiyat",n:100,v:["وَالْعَادِيَاتِ ضَبْحًا","فَالْمُورِيَاتِ قَدْحًا","فَالْمُغِيرَاتِ صُبْحًا","فَأَثَرْنَ بِهِ نَقْعًا","فَوَسَطْنَ بِهِ جَمْعًا","إِنَّ الْإِنسَانَ لِرَبِّهِ لَكَنُودٌ","وَإِنَّهُ عَلَىٰ ذَٰلِكَ لَشَهِيدٌ","وَإِنَّهُ لِحُبِّ الْخَيْرِ لَشَدِيدٌ","أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِي الْقُبُورِ","وَحُصِّلَ مَا فِي الصُّدُورِ","إِنَّ رَبَّهُم بِهِمْ يَوْمَئِذٍ لَّخَبِيرٌ"]},
+{name:"Al-Qari'ah",n:101,v:["الْقَارِعَةُ","مَا الْقَارِعَةُ","وَمَا أَدْرَاكَ مَا الْقَارِعَةُ","يَوْمَ يَكُونُ النَّاسُ كَالْفَرَاشِ الْمَبْثُوثِ","وَتَكُونُ الْجِبَالُ كَالْعِهْنِ الْمَنفُوشِ","فَأَمَّا مَن ثَقُلَتْ مَوَازِينُهُ","فَهُوَ فِي عِيشَةٍ رَّاضِيَةٍ","وَأَمَّا مَنْ خَفَّتْ مَوَازِينُهُ","فَأُمُّهُ هَاوِيَةٌ","وَمَا أَدْرَاكَ مَا هِيَهْ","نَارٌ حَامِيَةٌ"]},
+{name:"At-Takatsur",n:102,v:["أَلْهَاكُمُ التَّكَاثُرُ","حَتَّىٰ زُرْتُمُ الْمَقَابِرَ","كَلَّا سَوْفَ تَعْلَمُونَ","ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ","كَلَّا لَوْ تَعْلَمُونَ عِلْمَ الْيَقِينِ","لَتَرَوُنَّ الْجَحِيمَ","ثُمَّ لَتَرَوُنَّهَا عَيْنَ الْيَقِينِ","ثُمَّ لَتُسْأَلُنَّ يَوْمَئِذٍ عَنِ النَّعِيمِ"]},
+{name:"Al-'Asr",n:103,v:["وَالْعَصْرِ","إِنَّ الْإِنسَانَ لَفِي خُسْرٍ","إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ"]},
+{name:"Al-Humazah",n:104,v:["وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ","الَّذِي جَمَعَ مَالًا وَعَدَّدَهُ","يَحْسَبُ أَنَّ مَالَهُ أَخْلَدَهُ","كَلَّا لَيُنبَذَنَّ فِي الْحُطَمَةِ","وَمَا أَدْرَاكَ مَا الْحُطَمَةُ","نَارُ اللَّهِ الْمُوقَدَةُ","الَّتِي تَطَّلِعُ عَلَى الْأَفْئِدَةِ","إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌ","فِي عَمَدٍ مُّمَدَّدَةٍ"]},
+{name:"Al-Fil",n:105,v:["أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ","أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ","وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ","تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ","فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍ"]}
+];
+const $=id=>document.getElementById(id);
+let pos=0,score=0,questions=[],current=null,recognition=null,recognized="",micActive=false;
+let driveProgress=0,driving=false,driveTimer=null,laneShift=0;
+let activeAudio=null,audioSequenceToken=0;
+const total=10;
+function norm(s){return (s||"").toLowerCase().replace(/[\u064B-\u065F\u0670\u0640]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/[^\u0600-\u06FF]/g,"").trim()}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function makeQuestions(){
+ const all=[]; 
+ // 1 required recitation of one of the three named surahs
+ all.push({type:"arrange",title:"Pos 1 • Susun ayat surat wajib",prompt:"Pilih surat wajib, dengarkan audio tilawah, lalu susun ayat dari awal sampai akhir.",surahChoices:[0,1,5]});
+ // 6 continuation questions, generated from a verse and its following verse within the same surah
+ let pairs=[];surahs.forEach((s,si)=>s.v.slice(0,-1).forEach((v,i)=>pairs.push({si,i})));
+ shuffle(pairs).slice(0,6).forEach(p=>{const s=surahs[p.si];all.push({type:"continue",title:"Sambung ayat",surah:p.si,index:p.i,prompt:"Lanjutkan ayat berikutnya:"})});
+ // one ending-to-next-surah challenge
+ all.push({type:"bridge",title:"Akhir surat ke surat selanjutnya",prompt:"Dengarkan akhir surat, lalu pilih awal surat berikutnya dari pilihan yang tersedia.",from:2});
+ // one guess-the-surah
+ const g=shuffle(surahs.map((s,i)=>i))[0];all.push({type:"guess",title:"Tebak surat",surah:g,index:Math.min(1,surahs[g].v.length-1),prompt:"Potongan ayat ini berasal dari surat apa?"});
+ // extra finish challenge
+ all.push({type:"guess",title:"Tebak surat • Final",surah:6,index:2,prompt:"Tebak nama surat dari potongan ayat berikut."});
+ return all;
+}
+function setStatus(t,kind=""){ $("status").innerHTML=kind?`<span class="${kind}">${t}</span>`:t}
+function updateTrack(){const progress=driving?pos+driveProgress:pos;if(window.update25DRace)window.update25DRace(progress/total,laneShift,driving);$("position").textContent=`Pos: ${pos}/${total}`;$("bar").style.width=(progress/total*100)+"%";$("pct").textContent=Math.round(progress/total*100)+"%"}
+function showDriving(){
+ driving=true;driveProgress=0;current=null;
+ $("qtitle").textContent=`Menuju Pos ${pos+1}`;
+ $("instruction").textContent="Gunakan joystick: dorong ke atas untuk gas, kiri/kanan untuk membelok, tarik ke bawah untuk rem. Soal muncul saat tiba di pos.";
+ $("question").innerHTML='<div class="small" style="text-align:center;font-weight:800">🏁 Arahkan joystick untuk mengemudi</div><div class="joy-label">ATAS: GAS • KIRI/KANAN: BELOK • BAWAH: REM</div>';
+ $("controls").innerHTML='<div class="joystick-wrap"><div class="joystick" id="joystick"><div class="stick" id="stick"></div></div></div><div class="joy-label">Geser bulatan kuning sesuai arah yang diinginkan</div>';
+ const joy=$("joystick"),stick=$("stick");let active=false,joyX=0,joyY=0;
+ const resetJoy=()=>{active=false;joyX=0;joyY=0;stick.style.transform="translate(0px,0px)";};
+ const move=e=>{
+   if(!active)return;
+   const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+   let dx=e.clientX-cx,dy=e.clientY-cy;const max=42,len=Math.hypot(dx,dy);
+   if(len>max){dx=dx/len*max;dy=dy/len*max;}
+   joyX=dx/max;joyY=dy/max;stick.style.transform=`translate(${dx}px,${dy}px)`;
+ };
+ joy.addEventListener("pointerdown",e=>{active=true;joy.setPointerCapture(e.pointerId);move(e);e.preventDefault()});
+ joy.addEventListener("pointermove",move);
+ joy.addEventListener("pointerup",resetJoy);joy.addEventListener("pointercancel",resetJoy);
+ stopDriving();
+ driveTimer=setInterval(()=>{
+   if(!driving)return;
+   if(joyY<-.18){
+     driveProgress=Math.min(1,driveProgress+(-joyY)*.018);
+     laneShift=Math.max(-18,Math.min(18,laneShift+joyX*.38));
+   }else if(joyY>.35){
+     driveProgress=Math.max(0,driveProgress-.006);
+     laneShift=Math.max(-18,Math.min(18,laneShift+joyX*.25));
+   }else if(Math.abs(joyX)>.12){
+     laneShift=Math.max(-18,Math.min(18,laneShift+joyX*.22));
+   }
+   updateTrack();
+   if(driveProgress>=1){
+     resetJoy();stopDriving();driving=false;
+     setStatus(`Sampai di Pos ${pos+1}! Saatnya menjawab tantangan.`,"good");
+     render();
+   }
+ },40);
+ updateTrack();
+}
+function stopDriving(){if(driveTimer){clearInterval(driveTimer);driveTimer=null}}
+function addMarkers(){updateTrack()}
+function render(){
+ stopQuestionAudio();stopDriving();driving=false;
+ if(pos>=total){finish();return}
+ current=questions[pos];$("qtitle").textContent=current.title;$("instruction").textContent=current.prompt;$("question").innerHTML="";$("controls").innerHTML="";
+ if(current.type==="arrange"){
+  const choices=document.createElement("div");choices.className="choices";
+  current.surahChoices.forEach(si=>{let b=document.createElement("button");b.textContent=surahs[si].name;b.onclick=()=>{current.selected=si;showArrange()};choices.appendChild(b)});$("question").appendChild(choices);
+  if(current.selected!==undefined)showArrange();
+ }else if(current.type==="continue"){
+  const s=surahs[current.surah],correct={surah:current.surah,index:current.index+1};
+  $("question").innerHTML=`<div class="small">${s.name} • Ayat ${current.index+1}</div><div class="arabic">${s.v[current.index]}</div><div class="actions"><button type="button" id="listenPrompt">🔊 Dengarkan ayat soal</button><button type="button" class="secondary" id="listenAnswer">▶ Dengarkan jawaban benar</button><button type="button" class="secondary" id="stopQuestionAudio">■ Hentikan audio</button></div><div class="small">Pilih ayat yang tepat untuk menyambung bacaan.</div>`;
+  $("listenPrompt").onclick=()=>playAyah(current.surah,current.index);
+  $("listenAnswer").onclick=()=>playAyah(current.surah,current.index+1);
+  $("stopQuestionAudio").onclick=stopQuestionAudio;
+  const pool=[];surahs.forEach((ss,si)=>ss.v.forEach((v,ai)=>{if(si!==correct.surah||ai!==correct.index)pool.push({text:v,surah:si,index:ai})}));
+  const opts=shuffle([correct,...shuffle(pool).slice(0,3)]);
+  const choices=document.createElement("div");choices.className="choices";
+  opts.forEach(o=>{const b=document.createElement("button");b.className="answer-option";b.innerHTML=`<span class="arabic">${surahs[o.surah].v[o.index]}</span><small>🔊 Dengarkan</small>`;b.onclick=()=>{if(o.surah===correct.surah&&o.index===correct.index){score+=100;setStatus("Benar! Ayat sambungannya tepat. +100 poin.","good");advance()}else setStatus("Belum tepat. Dengarkan kembali dan coba lagi.","bad")};choices.appendChild(b)});$("question").appendChild(choices);
+ }else if(current.type==="bridge"){
+  const s=surahs[current.from],next=surahs[current.from+1],lastStart=Math.max(0,s.v.length-2);
+  $("question").innerHTML=`<div class="small">${s.name} • akhir surat</div><div class="arabic">${s.v.slice(-2).join(" ۝ ")}</div><div class="small">Lanjutkan dengan awal surat ${next.name}</div><div class="actions"><button type="button" id="listenBridge">🔊 Dengarkan akhir surat</button><button type="button" class="secondary" id="listenNextStart">▶ Dengarkan awal surat berikutnya</button><button type="button" class="secondary" id="listenBridgeAll">▶ Dengarkan sambungan lengkap</button><button type="button" class="secondary" id="stopQuestionAudio">■ Hentikan audio</button></div>`;
+  $("listenBridge").onclick=()=>playSequence(current.from,lastStart,s.v.length-1);
+  $("listenNextStart").onclick=()=>playAyah(current.from+1,0);
+  $("listenBridgeAll").onclick=()=>playBridgeSequence(current.from);
+  $("stopQuestionAudio").onclick=stopQuestionAudio;
+  const correct={surah:current.from+1,index:0};
+  const pool=[];surahs.forEach((ss,si)=>{if(si!==correct.surah)pool.push({surah:si,index:0})});
+  const opts=shuffle([correct,...shuffle(pool).slice(0,3)]);
+  const choices=document.createElement("div");choices.className="choices";
+  opts.forEach(o=>{const b=document.createElement("button");b.className="answer-option";b.innerHTML=`<span class="small">${surahs[o.surah].name}</span><span class="arabic">${surahs[o.surah].v[0]}</span>`;b.onclick=()=>{if(o.surah===correct.surah){score+=100;setStatus("Benar! Kamu berhasil menyambung ke surat berikutnya. +100 poin.","good");advance()}else setStatus("Belum tepat. Coba dengarkan lagi sambungan suratnya.","bad")};choices.appendChild(b)});$("question").appendChild(choices);
+ }else{
+  const s=surahs[current.surah];$("question").innerHTML=`<div class="arabic">${s.v[current.index]}</div><div class="actions"><button type="button" id="listenGuess">🔊 Dengarkan potongan ayat</button><button type="button" class="secondary" id="stopQuestionAudio">■ Hentikan audio</button></div><div class="small">Dengarkan bacaan, lalu pilih nama surat yang benar:</div>`; 
+  $("listenGuess").onclick=()=>playAyah(current.surah,current.index);
+  $("stopQuestionAudio").onclick=stopQuestionAudio;
+  const opts=shuffle([current.surah,...shuffle(surahs.map((x,i)=>i).filter(i=>i!==current.surah)).slice(0,3)]);
+  const choices=document.createElement("div");choices.className="choices";opts.forEach(i=>{let b=document.createElement("button");b.textContent=surahs[i].name;b.onclick=()=>{if(i===current.surah){score+=100;setStatus("Tepat! +100 poin.","good");advance()}else setStatus("Belum tepat. Coba pilih lagi.","bad")};choices.appendChild(b)});$("question").appendChild(choices);
+ }
+ $("score").textContent="Poin: "+score;updateTrack();
+}
+function ayahAudioUrl(surahNumber,ayahNumber){
+ return `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${String(surahNumber).padStart(3,"0")}${String(ayahNumber).padStart(3,"0")}.mp3`;
+}
+function stopQuestionAudio(){
+ audioSequenceToken++;
+ if(activeAudio){activeAudio.pause();activeAudio.currentTime=0;activeAudio=null}
+ setStatus("Audio dihentikan.");
+}
+function playAyah(surahIndex,ayahIndex){
+ stopQuestionAudio();
+ const s=surahs[surahIndex];
+ activeAudio=new Audio(ayahAudioUrl(s.n,ayahIndex+1));
+ activeAudio.onerror=()=>setStatus("Audio ayat belum tersedia atau koneksi terputus. Periksa internet lalu coba lagi.","bad");
+ activeAudio.play().catch(()=>setStatus("Audio tidak dapat diputar. Periksa koneksi internet dan izin audio browser.","bad"));
+ return activeAudio;
+}
+function playSequence(surahIndex,startIndex,endIndex){
+ stopQuestionAudio();
+ const token=audioSequenceToken,s=surahs[surahIndex];
+ let i=startIndex;
+ const next=()=>{
+  if(token!==audioSequenceToken||i>endIndex)return;
+  activeAudio=new Audio(ayahAudioUrl(s.n,i+1));
+  activeAudio.onended=()=>{i++;next()};
+  activeAudio.onerror=()=>setStatus("Audio ayat belum tersedia atau koneksi terputus. Coba putar ayat satu per satu.","bad");
+  activeAudio.play().catch(()=>setStatus("Audio tidak dapat diputar. Periksa koneksi internet dan izin audio browser.","bad"));
+ };
+ next();
+}
+function playBridgeSequence(surahIndex){
+ stopQuestionAudio();
+ const token=audioSequenceToken,first=surahs[surahIndex],second=surahs[surahIndex+1];
+ const items=[];
+ for(let i=Math.max(0,first.v.length-2);i<first.v.length;i++)items.push([first.n,i+1]);
+ items.push([second.n,1]);
+ let i=0;
+ const next=()=>{
+  if(token!==audioSequenceToken||i>=items.length)return;
+  activeAudio=new Audio(ayahAudioUrl(items[i][0],items[i][1]));
+  activeAudio.onended=()=>{i++;next()};
+  activeAudio.onerror=()=>setStatus("Audio sambungan surat belum tersedia atau koneksi terputus.","bad");
+  activeAudio.play().catch(()=>setStatus("Audio tidak dapat diputar. Periksa koneksi internet.","bad"));
+ };
+ next();
+}
+function playWholeSurah(surahIndex){
+ const s=surahs[surahIndex];
+ playSequence(surahIndex,0,s.v.length-1);
+ return stopQuestionAudio;
+}
+function showArrange(){
+ const s=surahs[current.selected];current.order=shuffle(s.v.map((_,i)=>i));current.picked=[];
+ $("question").innerHTML=`<div class="small">${s.name} • Surat ${s.n} • Susun ${s.v.length} ayat sesuai urutan.</div>
+ <div class="actions"><button type="button" id="listenAll">▶ Dengarkan seluruh surat</button><button type="button" class="secondary" id="stopAudio">■ Hentikan audio</button></div>
+ <div class="small" style="margin-top:12px">Susunan ayat pilihanmu:</div>
+ <div id="picked" class="arabic" style="min-height:76px;font-size:22px">Ketuk potongan ayat sesuai urutan.</div>
+ <div class="small">Ketuk 🔊 untuk mendengarkan ayat, lalu ketuk potongan ayat untuk menyusunnya.</div>
+ <div id="tiles" class="choices"></div>`;
+ let stopAll=null;
+ $("listenAll").onclick=()=>{if(stopAll)stopAll();stopAll=playWholeSurah(current.selected)};
+ $("stopAudio").onclick=()=>{if(stopAll)stopAll();setStatus("Audio dihentikan.")};
+ const tiles=$("tiles");
+ current.order.forEach(idx=>{
+  const row=document.createElement("div");row.style.display="grid";row.style.gridTemplateColumns="minmax(0,1fr) auto";row.style.gap="7px";
+  const btn=document.createElement("button");btn.type="button";btn.textContent=s.v[idx];btn.style.direction="rtl";btn.style.fontFamily='"Noto Naskh Arabic","Amiri",serif';btn.style.fontSize="20px";btn.style.lineHeight="1.8";btn.style.textAlign="center";
+  btn.onclick=()=>{
+   if(current.picked.includes(idx))return;
+   current.picked.push(idx);btn.disabled=true;btn.style.opacity=".35";
+   $("picked").textContent=current.picked.map(i=>s.v[i]).join(" ۝ ");
+   if(current.picked.length===s.v.length){
+    if(current.picked.every((v,i)=>v===i)){score+=100;setStatus("MasyaAllah! Susunan ayat benar. +100 poin.","good");advance()}
+    else{setStatus("Urutan belum tepat. Silakan ulangi susunan.","bad");const retry=document.createElement("button");retry.className="secondary";retry.textContent="Ulangi susunan";retry.onclick=showArrange;$("controls").appendChild(retry)}
+   }
+  };
+  const listen=document.createElement("button");listen.type="button";listen.className="secondary";listen.textContent="🔊";listen.title="Dengarkan ayat";listen.onclick=()=>playAyah(current.selected,idx);
+  row.appendChild(btn);row.appendChild(listen);tiles.appendChild(row);
+ });
+ $("controls").innerHTML='<button class="secondary" id="resetArrange">Acak ulang ayat</button>';
+ $("resetArrange").onclick=showArrange;
+}
+function advance(){pos++;$("score").textContent="Poin: "+score;updateTrack();setTimeout(()=>{if(pos>=total)finish();else showDriving()},650)}
+function finish(){$("qtitle").textContent="🏆 Balapan selesai!";$("instruction").textContent="Kamu telah menyelesaikan seluruh pos hafalan."; $("question").innerHTML=`<div class="arabic">مَا شَاءَ اللَّهُ</div><h2 style="text-align:center">Skor akhir: ${score} poin</h2><p class="small" style="text-align:center">Selesai 10 pos • Materi Al-Zalzalah sampai Al-Fil</p>`;$("controls").innerHTML="";let b=document.createElement("button");b.textContent="Main lagi";b.onclick=reset;$("controls").appendChild(b);setStatus("Hebat! Perlu diingat, penilaian suara otomatis adalah perkiraan, bukan tajwid atau tasmi' yang tervalidasi.","good")}
+function startGame(){questions=makeQuestions();pos=0;score=0;driveProgress=0;laneShift=0;$("score").textContent="Poin: 0";showDriving();setStatus("Balapan dimulai! Tahan tombol GAS untuk menuju Pos 1.")};
+function reset(){stopDriving();driving=false;pos=0;score=0;driveProgress=0;questions=makeQuestions();$("qtitle").textContent="Siap memulai balapan?";$("instruction").textContent="Kendalikan mobil sendiri. Soal muncul saat tiba di pos pemeriksaan."; $("question").innerHTML="";$("controls").innerHTML='<button id="start">Mulai Balapan</button>';$("start").onclick=startGame;setStatus("Tekan “Mulai Balapan” untuk memulai.");updateTrack()}
+$("start").onclick=startGame;window.addEventListener("resize",addMarkers);addMarkers();
+</script><script>if ("serviceWorker" in navigator && location.protocol.startsWith("http")) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {})); }</script>
+
+
+<script>
+const THREE=window.THREE;
+
+const canvas=document.getElementById("race3d");
+if(canvas && THREE){
+ try {
+ const scene=new THREE.Scene();
+ scene.background=new THREE.Color(0x8bc9f3);
+ scene.fog=new THREE.Fog(0x8bc9f3,35,145);
+ const camera=new THREE.PerspectiveCamera(66,1,0.1,260);
+ const renderer=new THREE.WebGLRenderer({canvas,antialias:true, powerPreference:"high-performance"});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
+ renderer.shadowMap.enabled=true;
+ renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ renderer.outputColorSpace=THREE.SRGBColorSpace;
+ scene.add(new THREE.HemisphereLight(0xe5f6ff,0x436b35,2.0));
+ const sun=new THREE.DirectionalLight(0xffffff,2.3);sun.position.set(-18,35,15);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
+ const mat=(c,r=.8)=>new THREE.MeshStandardMaterial({color:c,roughness:r});
+ const grass=mat(0x398c43),road=new THREE.MeshStandardMaterial({color:0x303b4b,roughness:.92,side:THREE.DoubleSide}),line=mat(0xffffff),gold=mat(0xffdf36),blue=mat(0x0751a7),glass=mat(0x9bdcf5,.25),rubber=mat(0x10151d),red=mat(0xe53232);
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(240,240),grass);ground.rotation.x=-Math.PI/2;ground.position.y=-.12;ground.receiveShadow=true;scene.add(ground);
+ // A broad winding road with a continuous center stripe.
+ const points=[];
+ for(let i=0;i<=240;i++){const t=i/240*Math.PI*2;points.push(new THREE.Vector3(Math.sin(t)*17,0,Math.cos(t)*34));}
+ const curve=new THREE.CatmullRomCurve3(points,true,"centripetal");
+ const roadGeo=new THREE.BufferGeometry(),verts=[],indices=[];
+ const samples=500;
+ for(let i=0;i<=samples;i++){const t=i/samples,p=curve.getPointAt(t),tan=curve.getTangentAt(t),side=new THREE.Vector3(-tan.z,0,tan.x).normalize();for(const w of [-5.4,5.4]){const v=p.clone().addScaledVector(side,w);verts.push(v.x,.015,v.z);}}
+ for(let i=0;i<samples;i++){let a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
+ roadGeo.setAttribute("position",new THREE.Float32BufferAttribute(verts,3));roadGeo.setIndex(indices);roadGeo.computeVertexNormals();
+ const roadMesh=new THREE.Mesh(roadGeo,road);roadMesh.receiveShadow=true;scene.add(roadMesh);
+ // Edge markings, dashed center line and roadside barriers.
+ function strip(offset,width,material,y=.04){const ps=[];for(let i=0;i<=samples;i++){const p=curve.getPointAt(i/samples),t=curve.getTangentAt(i/samples),side=new THREE.Vector3(-t.z,0,t.x).normalize();ps.push(p.addScaledVector(side,offset));}const g=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(ps),samples,width,5,false);const m=new THREE.Mesh(g,material);m.position.y=y;scene.add(m);}
+ strip(-5.15,.13,gold);strip(5.15,.13,gold);
+ for(let i=0;i<100;i++){const t=i/100,p=curve.getPointAt(t),tan=curve.getTangentAt(t);const dash=new THREE.Mesh(new THREE.BoxGeometry(.13,.035,1.15),line);dash.position.set(p.x,.055,p.z);dash.rotation.y=Math.atan2(tan.x,tan.z);scene.add(dash);}
+ // Trees and simple school-side scenery.
+ for(let i=0;i<75;i++){const t=(i/75)*Math.PI*2,p=curve.getPointAt(t),tan=curve.getTangentAt(t),side=new THREE.Vector3(-tan.z,0,tan.x).normalize();for(const sign of [-1,1]){const q=p.clone().addScaledVector(side,8+Math.random()*7);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.18,.25,1.5,7),mat(0x76502b));trunk.position.set(q.x,.7,q.z);trunk.castShadow=true;scene.add(trunk);const crown=new THREE.Mesh(new THREE.ConeGeometry(1.25,3.2,8),mat([0x16753a,0x238b45,0x2c9c50][i%3]));crown.position.set(q.x,2.8,q.z);crown.castShadow=true;scene.add(crown);}}
+ // Checkpoint gates placed around the circuit.
+ const gates=[];
+ for(let i=0;i<10;i++){const t=i/10,p=curve.getPointAt(t),tan=curve.getTangentAt(t),yaw=Math.atan2(tan.x,tan.z);const group=new THREE.Group();group.position.copy(p);group.rotation.y=yaw;const post1=new THREE.Mesh(new THREE.BoxGeometry(.28,3.8,.3),blue),post2=post1.clone(),bar=new THREE.Mesh(new THREE.BoxGeometry(10.6,.42,.42),gold);post1.position.set(-5,1.9,0);post2.position.set(5,1.9,0);bar.position.set(0,3.8,0);group.add(post1,post2,bar);const sign=new THREE.Mesh(new THREE.BoxGeometry(2.2,.85,.25),blue);sign.position.set(0,3.15,0);group.add(sign);scene.add(group);gates.push(group);}
+ // Low-poly blue school race car, with wheels and glass cabin.
+ const car=new THREE.Group();scene.add(car);
+ const body=new THREE.Mesh(new THREE.BoxGeometry(2.15,.62,4.15),blue);body.position.y=.82;body.castShadow=true;car.add(body);
+ const hood=new THREE.Mesh(new THREE.BoxGeometry(1.95,.25,1.25),mat(0x1475d1));hood.position.set(0,1.15,-1.2);car.add(hood);
+ const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.55,.85,1.8),glass);cabin.position.set(0,1.48,.15);cabin.castShadow=true;car.add(cabin);
+ const roof=new THREE.Mesh(new THREE.BoxGeometry(1.5,.12,1.72),blue);roof.position.set(0,1.95,.15);car.add(roof);
+ const wheels=[];
+ for(const x of [-1.12,1.12])for(const z of [-1.28,1.28]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.28,16),rubber);w.rotation.z=Math.PI/2;w.position.set(x,.48,z);w.castShadow=true;car.add(w);wheels.push(w);}
+ const lampMat=mat(0xfff4b0);for(const x of [-.7,.7]){const lamp=new THREE.Mesh(new THREE.BoxGeometry(.38,.16,.08),lampMat);lamp.position.set(x,.94,-2.1);car.add(lamp);}
+ const startP=curve.getPointAt(0);car.position.set(startP.x,.1,startP.z+5);
+ let targetProgress=0,lane=0,isMoving=false,clock=new THREE.Clock();
+ function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+ new ResizeObserver(resize).observe(canvas);resize();
+ window.update3DRace=(progress,laneShift,moving)=>{targetProgress=Math.max(0,Math.min(.999,progress));lane=laneShift/18;isMoving=moving;document.getElementById("checkpointHud").textContent=`POS ${Math.min(10,Math.floor(progress*10))} / 10`;document.getElementById("speedHud").textContent=moving?"68 km/jam":"0 km/jam";};
+ function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.04);const p=curve.getPointAt(targetProgress),t=curve.getTangentAt(targetProgress),side=new THREE.Vector3(-t.z,0,t.x).normalize();const carPos=p.clone().addScaledVector(side,lane*2.2);car.position.lerp(new THREE.Vector3(carPos.x,.08,carPos.z),Math.min(1,dt*7));const yaw=Math.atan2(t.x,t.z);car.rotation.y+=(yaw-car.rotation.y)*Math.min(1,dt*6);wheels.forEach(w=>{if(isMoving)w.rotation.x-=dt*8;});const camPos=car.position.clone().add(new THREE.Vector3(-t.x*10,6.3,-t.z*10));camera.position.lerp(camPos,Math.min(1,dt*4));const look=car.position.clone().add(new THREE.Vector3(t.x*7,1.3,t.z*7));camera.lookAt(look);renderer.render(scene,camera);}
+ animate();
+ } catch(err) {
+   console.error("3D game gagal dimuat:",err);
+   showTrackFallback(canvas);
+ }
+} else if(canvas) {
+ showTrackFallback(canvas);
+}
+function showTrackFallback(canvas){
+ canvas.style.display="none";
+ const fallback=document.createElement("div");
+ fallback.style.cssText="position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:24px;background:linear-gradient(#8bc9f3 0 45%,#398c43 45%);color:#062d70;font-weight:800";
+ fallback.innerHTML="🏁 LINTASAN BALAP MI AT-TAQWA<br><span style='font-size:13px'>Mesin 3D belum berhasil dimuat. Periksa internet lalu muat ulang halaman.</span>";
+ canvas.parentElement.appendChild(fallback);
+}
+</script>
+
+
+<script>
+(()=>{
+const canvas=document.getElementById("race25d");if(!canvas)return;
+const ctx=canvas.getContext("2d");let progress=0,lane=0,moving=false,last=0,frame=0;
+function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.floor(r.width*d));canvas.height=Math.max(1,Math.floor(r.height*d));ctx.setTransform(d,0,0,d,0,0);}
+new ResizeObserver(resize).observe(canvas);resize();
+window.update25DRace=(p,l,m)=>{progress=p;lane=l/18;moving=m;const speed=document.getElementById("speedHud");if(speed)speed.textContent=m?"68 km/jam":"0 km/jam";const cp=document.getElementById("checkpointHud");if(cp)cp.textContent=`POS ${Math.min(10,Math.floor(p*10))} / 10`;};
+function poly(points,color){ctx.fillStyle=color;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fill();}
+function draw(ts){
+ const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h){requestAnimationFrame(draw);return}
+ const horizon=h*.39,roadShift=Math.sin(progress*16)*w*.055;
+ const sky=ctx.createLinearGradient(0,0,0,horizon);sky.addColorStop(0,"#67b7ed");sky.addColorStop(1,"#d6f3ff");ctx.fillStyle=sky;ctx.fillRect(0,0,w,horizon);
+ // distant clouds and sun
+ ctx.fillStyle="#fff9";for(let i=0;i<5;i++){let x=((i*197+frame*.08)%(w+120))-60;ctx.beginPath();ctx.ellipse(x,35+(i%3)*25,30,9,0,0,Math.PI*2);ctx.fill();}
+ ctx.fillStyle="#ffe98a";ctx.beginPath();ctx.arc(w*.82,h*.13,24,0,Math.PI*2);ctx.fill();
+ // hills and grass
+ poly([[0,horizon],[w*.18,h*.29],[w*.35,horizon],[w*.65,h*.26],[w,horizon]],"#6eaa68");
+ ctx.fillStyle="#378c43";ctx.fillRect(0,horizon,w,h-horizon);
+ // road perspective trapezoid
+ const topW=w*.12,bottomW=w*.94,cx=w/2+roadShift;
+ poly([[cx-topW/2,horizon],[cx+topW/2,horizon],[w*.98,h],[w*.02,h]],"#343d4c");
+ // shoulders and edge strips
+ poly([[cx-topW/2-5,horizon],[cx-topW/2,horizon],[w*.02,h],[0,h]],"#e5d8b0");
+ poly([[cx+topW/2,horizon],[cx+topW/2+5,horizon],[w,h],[w*.98,h]],"#e5d8b0");
+ // road dashed lane marks
+ for(let i=0;i<12;i++){let z=((i/12+progress*3)%1),y=horizon+z*z*(h-horizon),ww=2+z*7,hh=4+z*25,x=cx+(lane*.05*w)*(1-z);ctx.fillStyle="#fff";ctx.fillRect(x-ww/2,y,ww,hh);}
+ // roadside trees with depth scaling
+ for(let i=0;i<16;i++){let z=((i/16+progress*1.7)%1),y=horizon+z*z*(h-horizon),scale=.12+z*.95;let side=i%2?1:-1,x=cx+side*(topW*.7+z*w*.42);
+ ctx.fillStyle="#704b2c";ctx.fillRect(x-3*scale,y-22*scale,6*scale,22*scale);
+ ctx.fillStyle=i%3?"#237d3c":"#32984a";ctx.beginPath();ctx.arc(x,y-28*scale,15*scale,0,Math.PI*2);ctx.fill();}
+ // checkpoint gate ahead, moves closer as progress increases
+ const gateZ=(.72-(progress*10%1)*.58),gy=horizon+gateZ*gateZ*(h-horizon),gw=topW+(bottomW-topW)*gateZ;
+ if(gateZ>.08){ctx.strokeStyle="#ffd83d";ctx.lineWidth=5+gateZ*7;ctx.beginPath();ctx.moveTo(cx-gw*.43,gy);ctx.lineTo(cx-gw*.43,gy-55*gateZ);ctx.lineTo(cx+gw*.43,gy-55*gateZ);ctx.lineTo(cx+gw*.43,gy);ctx.stroke();ctx.fillStyle="#073b89";ctx.fillRect(cx-38*gateZ,gy-68*gateZ,76*gateZ,22*gateZ);ctx.fillStyle="white";ctx.font=`bold ${Math.max(8,12*gateZ)}px sans-serif`;ctx.textAlign="center";ctx.fillText("POS "+(Math.floor(progress*10)+1),cx,gy-53*gateZ);}
+ // player's car from behind
+ const carX=w/2+lane*w*.20,carY=h*.82,carW=Math.min(w*.25,120),carH=carW*.82;
+ poly([[carX-carW*.48,carY],[carX-carW*.42,carY-carH*.52],[carX-carW*.28,carY-carH*.85],[carX+carW*.28,carY-carH*.85],[carX+carW*.42,carY-carH*.52],[carX+carW*.48,carY]],"#063d91");
+ poly([[carX-carW*.27,carY-carH*.55],[carX-carW*.19,carY-carH*.81],[carX+carW*.19,carY-carH*.81],[carX+carW*.27,carY-carH*.55]],"#8bdcf7");
+ poly([[carX-carW*.46,carY-carH*.05],[carX-carW*.35,carY-carH*.05],[carX-carW*.35,carY-carH*.25],[carX-carW*.46,carY-carH*.25]],"#151b25");
+ poly([[carX+carW*.35,carY-carH*.05],[carX+carW*.46,carY-carH*.05],[carX+carW*.46,carY-carH*.25],[carX+carW*.35,carY-carH*.25]],"#151b25");
+ ctx.fillStyle="#fff4a3";ctx.fillRect(carX-carW*.34,carY-carH*.18,carW*.12,carH*.06);ctx.fillRect(carX+carW*.22,carY-carH*.18,carW*.12,carH*.06);
+ // speed streaks while moving
+ if(moving){ctx.strokeStyle="#ffffff70";ctx.lineWidth=2;for(let i=0;i<8;i++){let x=(i*83+frame*3)%w;ctx.beginPath();ctx.moveTo(x,h*.56);ctx.lineTo(x-10,h*.72);ctx.stroke();}}
+ frame++;requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+})();
+</script>
+
+</body></html>

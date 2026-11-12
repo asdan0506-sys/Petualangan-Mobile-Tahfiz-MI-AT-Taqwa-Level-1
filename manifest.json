@@ -1,0 +1,19 @@
+{
+  "name": "Balap Hafalan Qur'an — MI At-Taqwa",
+  "short_name": "Balap Hafalan",
+  "description": "Game balap hafalan surat Al-Zalzalah sampai Al-Fil.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eaf5ff",
+  "theme_color": "#06439e",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
